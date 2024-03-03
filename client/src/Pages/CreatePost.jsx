@@ -69,7 +69,9 @@ export const CreatePost = () => {
         },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
+      console.log("Created Post is : ", data)
       if (!res.ok) {
         setPublishError(data.message);
         return;
