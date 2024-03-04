@@ -91,7 +91,7 @@ exports.deletePost = async (req, res) => {
     return res.status(403).json({
       success: false,
       message: "You are not allowed to delete this post",
-    })
+    });
   }
   try {
     await Post.findByIdAndDelete(req.params.postId);
@@ -104,6 +104,40 @@ exports.deletePost = async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "Error while deleting the post",
+    });
+  }
+};
+
+exports.updatePost = async (req, res) => {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not allowed to update this post",
+    });
+  }
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Post updated successfully.",
+      updatedPost,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      message: "Error while updating the post",
     });
   }
 };
