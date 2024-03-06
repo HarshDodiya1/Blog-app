@@ -50,6 +50,10 @@ exports.updateUser = async (req, res) => {
       });
     }
   }
+  console.log("Username: ", req.body.username)
+  console.log("email: ", req.body.email)
+  console.log("ProfilePicture: " ,req.body.profilePicture)
+  console.log("req.params.userId", req.params.userId)
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -63,8 +67,13 @@ exports.updateUser = async (req, res) => {
       },
       { new: true }
     );
-    const { password, ...rest } = updatedUser._doc;
-    res.status(200).json(rest);
+    const { password, ...user } = updatedUser._doc;
+    console.log("updatedUser._doc: User: ", user)
+    res.status(200).json({
+      success: true,
+      message: "Yess now problem solved.",
+      user,
+    });
   } catch (error) {
     console.log(error)
     return res.status(400).json({
@@ -98,7 +107,7 @@ exports.deleteUser = async (req, res) => {
 exports.signout = (req, res) => {
   try {
     res
-      .clearCookie('access_token')
+      .clearCookie('Bearer')
       .status(200)
       .json('User has been signed out');
   } catch (error) {

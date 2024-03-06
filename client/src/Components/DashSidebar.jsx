@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 export const DashSidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user)
+  console.log("This is the currentUser of DashSidebar: ", currentUser)
   const [tab, setTab] = useState("");
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export const DashSidebar = () => {
     <Sidebar className="w-full md:w-56">
       <Sidebar.Items>
         <Sidebar.ItemGroup className="flex flex-col gap-1">
-          {currentUser && currentUser.isAdmin && (
+          {currentUser && currentUser.user.isAdmin && (
             <Link to="/dashboard?tab=dash">
               <Sidebar.Item
                 active={tab === "dash" || !tab}
@@ -59,14 +60,14 @@ export const DashSidebar = () => {
             <Sidebar.Item
               active={tab === "profile"}
               icon={HiUser}
-              label={currentUser.isAdmin ? "Admin" : "User"}
+              label={currentUser.user.isAdmin ? "Admin" : "User"}
               labelColor="dark"
               as="div"
             >
               Profile
             </Sidebar.Item>
           </Link>
-          {currentUser.isAdmin && (
+          {currentUser.user.isAdmin && (
             <Link to="/dashboard?tab=posts">
               <Sidebar.Item
                 active={tab === "posts"}
@@ -77,7 +78,7 @@ export const DashSidebar = () => {
               </Sidebar.Item>
             </Link>
           )}
-          {currentUser.isAdmin && (
+          {currentUser.user.isAdmin && (
             <>
               <Link to="/dashboard?tab=users">
                 <Sidebar.Item

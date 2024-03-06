@@ -3,8 +3,7 @@ const dotenv = require("dotenv");
 
 exports.verifyToken = (req, res, next) => {
   const token = req.cookies.Bearer;
-
-  // console.log("This is our req.body: ", req.body);
+  console.log("Token :" , token)
   if (!token) {
     return res.status(400).json({
       success: false,

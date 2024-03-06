@@ -21,12 +21,13 @@ export const UpdatePost = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const { postId } = useParams();
 
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+  const { postId } = useParams();
   useEffect(() => {
+
     try {
       const fetchPost = async () => {
         const res = await fetch(`/api/post/getposts?postId=${postId}`);
@@ -88,7 +89,7 @@ export const UpdatePost = () => {
     e.preventDefault();
     try {
       const res = await fetch(
-        `/api/post/updatepost/${formData._id}/${currentUser._id}`,
+        `/api/post/updatepost/${formData._id}/${currentUser.user._id}`,
         {
           method: "PUT",
           headers: {

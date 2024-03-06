@@ -5,8 +5,8 @@ import React from "react";
 
 export const OnlyAdminPrivateRoute = () => {
   const { currentUser } = useSelector((state) => state.user);
-  console.log("This is our current user: ", currentUser);
-  return currentUser && currentUser.isAdmin ? (
+  console.log("This is our current user we get from OnlyAdminPrivateRoute: ", currentUser);
+  return currentUser && currentUser.user.isAdmin ? (
     <Outlet />
   ) : (
     <Navigate to="/signin" />

@@ -91,14 +91,14 @@ exports.signin = async (req, res) => {
 
       // set the cookie for response and return success;
       const options = {
-        expiresIn: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
         httpOnly: true,
       };
+      
       res.cookie("Bearer", token, options).status(200).json({
+        message: "User Login Success :)",
         success: true,
         token,
         user,
-        message: "User Login Success",
       });
     } else {
       return res.status(401).json({
@@ -149,8 +149,8 @@ exports.googleAuth = async (req, res) => {
         httpOnly: true,
       };
       res.cookie("Bearer", token, options).status(200).json({
-        success: true,
         token,
+        success: true,
         user,
         message: "User Login Success",
       });

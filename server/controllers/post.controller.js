@@ -109,6 +109,9 @@ exports.deletePost = async (req, res) => {
 };
 
 exports.updatePost = async (req, res) => {
+  console.log("req.user.isAdmin: ", req.user.isAdmin)
+  console.log("req.user.id: ", req.user.id)
+  console.log("req.params.userId: ", req.params.userId)
   if (!req.user.isAdmin || req.user.id !== req.params.userId) {
     return res.status(403).json({
       success: false,
@@ -116,6 +119,7 @@ exports.updatePost = async (req, res) => {
     });
   }
   try {
+    console.log("req.params.postId: ", req.params.postId)
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
       {
