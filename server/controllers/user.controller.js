@@ -6,15 +6,15 @@ exports.test = (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  console.log("This is our params ", req.params.userId)
-  console.log("This is our req.user.id:  ", req.params.userId)
+  console.log("This is our params ", req.params.userId);
+  console.log("This is our req.user.id:  ", req.params.userId);
 
   if (req.user.id !== req.params.userId) {
     return res.status(403).json({
       success: false,
       message: "You are not allowed to update this user",
     });
-  } 
+  }
   if (req.body.password) {
     if (req.body.password.length < 6) {
       return res.status(403).json({
@@ -50,10 +50,10 @@ exports.updateUser = async (req, res) => {
       });
     }
   }
-  console.log("Username: ", req.body.username)
-  console.log("email: ", req.body.email)
-  console.log("ProfilePicture: " ,req.body.profilePicture)
-  console.log("req.params.userId", req.params.userId)
+  console.log("Username: ", req.body.username);
+  console.log("email: ", req.body.email);
+  console.log("ProfilePicture: ", req.body.profilePicture);
+  console.log("req.params.userId", req.params.userId);
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -68,68 +68,86 @@ exports.updateUser = async (req, res) => {
       { new: true }
     );
     const { password, ...user } = updatedUser._doc;
-    console.log("updatedUser._doc: User: ", user)
+    console.log("updatedUser._doc: User: ", user);
     res.status(200).json({
       success: true,
       message: "Yess now problem solved.",
       user,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).json({
-        success: false,
-        message: "Error while updating the user.",
-      });
+      success: false,
+      message: "Error while updating the user.",
+    });
   }
 };
-
-
 
 exports.deleteUser = async (req, res) => {
   if (!req.user.isAdmin && req.user.id !== req.params.userId) {
     return res.status(400).json({
       success: false,
-      message: 'You are not allowed to delete this user'
+      message: "You are not allowed to delete this user",
     });
   }
   try {
     await User.findByIdAndDelete(req.params.userId);
-    res.status(200).json('User has been deleted');
+    res.status(200).json("User has been deleted");
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).json({
-        success: false,
-        message: "Error while deleting the user.",
-      });
+      success: false,
+      message: "Error while deleting the user.",
+    });
   }
 };
 
 exports.signout = (req, res) => {
   try {
-    res
-      .clearCookie('Bearer')
-      .status(200)
-      .json('User has been signed out');
+    res.clearCookie("Bearer").status(200).json("User has been signed out");
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).json({
+      success: false,
+      message: "Error while deleting the user.",
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    console.log("this is req.user: from getUser: ", req.params.userId);
+    if (!user) {
+      return res.status(403).json({
         success: false,
-        message: "Error while deleting the user.",
+        message: "did not get user by the id",
       });
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+    console.log("this is rest: ", rest)
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      message: "Error while getting the user.",
+    });
   }
 };
 
 exports.getUsers = async (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({
-      success: false,
-      message:  'You are not allowed to see all users'
-    });
-  }
   try {
+    console.log("final WHY NOT GETTING USER?: ", req.user);
+    if (!req.user.isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to see all users",
+      });
+    }
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.sort === 'asc' ? 1 : -1;
+    const sortDirection = req.query.sort === "asc" ? 1 : -1;
 
     const users = await User.find()
       .sort({ createdAt: sortDirection })
@@ -159,31 +177,17 @@ exports.getUsers = async (req, res) => {
       totalUsers,
       lastMonthUsers,
     });
+    console.log(
+      "UserwithoutPassword, totalUsers, lastmonthUsers: ",
+      usersWithoutPassword,
+      totalUsers,
+      lastMonthUsers
+    );
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).json({
-        success: false,
-        message: "Error while getting the users.",
-      });
-  }
-};
-
-exports.getUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-      return res.status(403).json({
-        success: false,
-        message: "did not get user by the id",
-      });
-    }
-    const { password, ...rest } = user._doc;
-    res.status(200).json(rest);
-  } catch (error) {
-    console.log(error)
-    return res.status(400).json({
-        success: false,
-        message: "Error while getting the user.",
-      });
+      success: false,
+      message: "Error while getting all the users..",
+    });
   }
 };

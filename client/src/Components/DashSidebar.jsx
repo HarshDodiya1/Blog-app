@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 export const DashSidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user)
-  console.log("This is the currentUser of DashSidebar: ", currentUser)
+  const { currentUser } = useSelector((state) => state.user);
+  console.log("This is the currentUser of DashSidebar: ", currentUser);
   const [tab, setTab] = useState("");
 
   useEffect(() => {

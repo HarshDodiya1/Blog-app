@@ -110,7 +110,7 @@ exports.signin = async (req, res) => {
     console.log(error);
     return res.status(400).json({
       success: false,
-      message: "Error while sign-in, please try again later.",
+      message: "Error while signin, please try again later.",
     });
   }
 };
