@@ -50,7 +50,6 @@ export default function CommentSection({ postId }) {
           setComments(data);
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     getComments();
@@ -81,7 +80,6 @@ export default function CommentSection({ postId }) {
         );
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -108,7 +106,6 @@ export default function CommentSection({ postId }) {
         setComments(comments.filter((comment) => comment._id !== commentId));
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
   return (
