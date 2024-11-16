@@ -31,7 +31,6 @@ export function DashboardComp() {
           setLastMonthUsers(data.lastMonthUsers);
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     const fetchPosts = async () => {
@@ -44,7 +43,6 @@ export function DashboardComp() {
           setLastMonthPosts(data.lastMonthPosts);
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     const fetchComments = async () => {
@@ -57,7 +55,6 @@ export function DashboardComp() {
           setLastMonthComments(data.lastMonthComments);
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     if (currentUser.user.isAdmin) {

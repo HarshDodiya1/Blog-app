@@ -22,7 +22,6 @@ export function DashComments() {
           }
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     if (currentUser.user.isAdmin) {
@@ -44,7 +43,6 @@ export function DashComments() {
         }
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -64,10 +62,8 @@ export function DashComments() {
         );
         setShowModal(false);
       } else {
-        console.log(data.message);
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
