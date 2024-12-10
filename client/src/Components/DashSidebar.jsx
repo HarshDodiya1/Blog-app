@@ -35,19 +35,20 @@ export const DashSidebar = () => {
       } else {
         dispatch(signoutSuccess());
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
   return (
-    <Sidebar className="w-full md:w-56">
-      <Sidebar.Items>
+    <Sidebar className="w-full h-full border-none">
+      {" "}
+      {/* Removed default border */}
+      <Sidebar.Items className="h-full py-4">
         <Sidebar.ItemGroup className="flex flex-col gap-1">
           {currentUser && currentUser.user.isAdmin && (
             <Link to="/dashboard?tab=dash">
               <Sidebar.Item
                 active={tab === "dash" || !tab}
                 icon={HiChartPie}
-                as="div"
+                className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
               >
                 Dashboard
               </Sidebar.Item>
@@ -59,29 +60,27 @@ export const DashSidebar = () => {
               icon={HiUser}
               label={currentUser.user.isAdmin ? "Admin" : "User"}
               labelColor="dark"
-              as="div"
+              className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
             >
               Profile
             </Sidebar.Item>
           </Link>
           {currentUser.user.isAdmin && (
-            <Link to="/dashboard?tab=posts">
-              <Sidebar.Item
-                active={tab === "posts"}
-                icon={HiDocumentText}
-                as="div"
-              >
-                Posts
-              </Sidebar.Item>
-            </Link>
-          )}
-          {currentUser.user.isAdmin && (
             <>
+              <Link to="/dashboard?tab=posts">
+                <Sidebar.Item
+                  active={tab === "posts"}
+                  icon={HiDocumentText}
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                >
+                  Posts
+                </Sidebar.Item>
+              </Link>
               <Link to="/dashboard?tab=users">
                 <Sidebar.Item
                   active={tab === "users"}
                   icon={HiOutlineUserGroup}
-                  as="div"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
                 >
                   Users
                 </Sidebar.Item>
@@ -90,7 +89,7 @@ export const DashSidebar = () => {
                 <Sidebar.Item
                   active={tab === "comments"}
                   icon={HiAnnotation}
-                  as="div"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
                 >
                   Comments
                 </Sidebar.Item>
@@ -99,7 +98,7 @@ export const DashSidebar = () => {
           )}
           <Sidebar.Item
             icon={HiArrowSmRight}
-            className="cursor-pointer"
+            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
             onClick={handleSignout}
           >
             Sign Out

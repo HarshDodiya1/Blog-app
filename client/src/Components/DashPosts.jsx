@@ -1,9 +1,8 @@
-import { Modal, Table, Button } from "flowbite-react";
+import { Button, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { set } from "mongoose";
 
 export function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
