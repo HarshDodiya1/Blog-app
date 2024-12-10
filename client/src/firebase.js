@@ -1,10 +1,7 @@
 // Import the functions you need from the SDKs you need
 import React from "react";  
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 
 const firebaseConfig = {
   apiKey: "AIzaSyBc5W3sD0hZOaQKFxwwfz2Cm65mPod50iQ",

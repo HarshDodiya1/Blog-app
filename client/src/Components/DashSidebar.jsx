@@ -16,7 +16,6 @@ export const DashSidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  console.log("This is the currentUser of DashSidebar: ", currentUser);
   const [tab, setTab] = useState("");
 
   useEffect(() => {
@@ -33,12 +32,10 @@ export const DashSidebar = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        console.log(data.message);
       } else {
         dispatch(signoutSuccess());
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
   return (

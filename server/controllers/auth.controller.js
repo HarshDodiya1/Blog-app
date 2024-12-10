@@ -53,7 +53,8 @@ exports.signin = async (req, res) => {
   try {
     // fetch the data from req.body
     const { email, password } = req.body;
-    console.log(req.body);
+
+    console.log("Whats going on ? :  ", req.body);
 
     // validate the provided values
     if (!email || !password) {
@@ -156,7 +157,7 @@ exports.googleAuth = async (req, res) => {
       });
     } else {
       const generatedPassword = Math.random().toString(36).slice(-8);
-      const newUser = await User.create({
+      const user = await User.create({
         username:
           name.toLowerCase().split(" ").join("") +
           Math.random().toString(10).slice(-4), // Harsh Dodiya => harshdodiya
@@ -164,20 +165,20 @@ exports.googleAuth = async (req, res) => {
         password: generatedPassword,
         profilePicture: profilePhoto,
       });
-      // await newUser.save();
+      // await user.save();
 
       const token = jwt.sign(
         {
-          email: newUser.email,
-          id: newUser._id,
-          isAdmin: newUser.isAdmin,
+          email: user.email,
+          id: user._id,
+          isAdmin: user.isAdmin,
         },
         process.env.JWT_SECRET,
         {
           expiresIn: "24h",
         }
       );
-      newUser.password = undefined;
+      user.password = undefined;
       const options = {
         expiresIn: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
         httpOnly: true,
@@ -185,7 +186,7 @@ exports.googleAuth = async (req, res) => {
       res.cookie("Bearer", token, options).status(200).json({
         success: true,
         token,
-        newUser,
+        user,
         message: "User Login Success",
       });
       console.log("yepp created")

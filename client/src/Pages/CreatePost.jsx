@@ -21,7 +21,7 @@ export const CreatePost = () => {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleUpdloadImage = async () => {
     try {
@@ -71,7 +71,6 @@ export const CreatePost = () => {
       });
 
       const data = await res.json();
-      console.log("Created Post is : ", data)
       if (!res.ok) {
         setPublishError(data.message);
         return;

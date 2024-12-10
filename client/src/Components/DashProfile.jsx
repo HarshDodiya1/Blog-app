@@ -25,7 +25,6 @@ import { Link } from "react-router-dom";
 
 export function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
-  console.log("currentUser.user.isAdmin? : ", currentUser.user.isAdmin);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -157,12 +156,10 @@ export function DashProfile() {
       });
       const data = await res.json();
       if (!res.ok) {
-        console.log(data.message);
       } else {
         dispatch(signoutSuccess());
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
   return (

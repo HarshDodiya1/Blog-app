@@ -22,7 +22,6 @@ export function DashUsers() {
           }
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     if (currentUser.user.isAdmin) {
@@ -42,7 +41,6 @@ export function DashUsers() {
         }
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -56,10 +54,8 @@ export function DashUsers() {
             setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
             setShowModal(false);
         } else {
-            console.log(data.message);
         }
     } catch (error) {
-        console.log(error.message);
     }
   };
 

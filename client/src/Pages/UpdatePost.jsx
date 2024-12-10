@@ -27,13 +27,11 @@ export const UpdatePost = () => {
 
   const { postId } = useParams();
   useEffect(() => {
-
     try {
       const fetchPost = async () => {
         const res = await fetch(`/api/post/getposts?postId=${postId}`);
         const data = await res.json();
         if (!res.ok) {
-          console.log(data.message);
           setPublishError(data.message);
           return;
         }
@@ -100,7 +98,6 @@ export const UpdatePost = () => {
       );
 
       const data = await res.json();
-      console.log("Created Post is : ", data);
       if (!res.ok) {
         setPublishError(data.message);
         return;

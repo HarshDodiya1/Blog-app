@@ -1,21 +1,19 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
+import { FooterComponent } from "./Components/Footer";
 import { Header } from "./Components/Header";
+import { OnlyAdminPrivateRoute } from "./Components/OnlyAdminPrivateRoute";
+import { PrivateRoute } from "./Components/PrivateRoute";
+import ScrollToTop from "./Components/ScrollToTop";
+import { About } from "./Pages/About";
+import { CreatePost } from "./Pages/CreatePost";
+import { Dashboard } from "./Pages/Dashboard";
 import { Home } from "./Pages/Home";
+import { PostPage } from "./Pages/PostPage";
 import { Projects } from "./Pages/Projects";
+import Search from "./Pages/Search";
 import { SignIn } from "./Pages/SignIn";
 import { SignUp } from "./Pages/SignUp";
-import { Dashboard } from "./Pages/Dashboard";
-import { About } from "./Pages/About";
-import { FooterComponent } from "./Components/Footer";
-``;
-import { PrivateRoute } from "./Components/PrivateRoute";
-import { OnlyAdminPrivateRoute } from "./Components/OnlyAdminPrivateRoute";
-import { CreatePost } from "./Pages/CreatePost";
 import { UpdatePost } from "./Pages/UpdatePost";
-import { PostPage } from "./Pages/PostPage";
-import ScrollToTop from "./Components/ScrollToTop";
-import Search from "./Pages/Search";
 
 function App() {
   return (

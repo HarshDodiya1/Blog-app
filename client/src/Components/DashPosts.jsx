@@ -25,7 +25,6 @@ export function DashPosts() {
           }
         }
       } catch (error) {
-        console.log(error.message);
       }
     };
     if (currentUser.user.isAdmin) {
@@ -47,7 +46,6 @@ export function DashPosts() {
         }
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -62,14 +60,12 @@ export function DashPosts() {
       );
       const data = await res.json();
       if (!res.ok) {
-        console.log(data.message);
       } else {
         setUserPosts((prev) =>
           prev.filter((post) => post._id !== postIdToDelete)
         );
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
