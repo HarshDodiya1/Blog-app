@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Modal, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
@@ -10,12 +10,11 @@ export function DashPosts() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(
-          `/api/post/getposts?userId=${currentUser.user._id}`
-        );
+        const res = await fetch(`/api/post/getposts?userId=${currentUser.user._id}`);
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
@@ -23,8 +22,7 @@ export function DashPosts() {
             setShowMore(false);
           }
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     if (currentUser.user.isAdmin) {
       fetchPosts();
@@ -34,9 +32,7 @@ export function DashPosts() {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(
-        `/api/post/getposts?userId=${currentUser.user._id}&startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/post/getposts?userId=${currentUser.user._id}&startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setUserPosts((prev) => [...prev, ...data.posts]);
@@ -44,110 +40,75 @@ export function DashPosts() {
           setShowMore(false);
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleDeletePost = async () => {
-    setShowModal(false);
     try {
-      const res = await fetch(
-        `/api/post/deletepost/${postIdToDelete}/${currentUser.user._id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) {
-      } else {
-        setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
-        );
+      const res = await fetch(`/api/post/deletepost/${postIdToDelete}/${currentUser.user._id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setUserPosts((prev) => prev.filter((post) => post._id !== postIdToDelete));
+        setShowModal(false);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+    <div className="max-w-6xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Manage Posts</h1>
       {currentUser.user.isAdmin && userPosts.length > 0 ? (
-        <>
-          <Table hoverable className="shadow-md">
-            <Table.Head>
-              <Table.HeadCell>Date updated</Table.HeadCell>
-              <Table.HeadCell>Post image</Table.HeadCell>
-              <Table.HeadCell>Post title</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
-              <Table.HeadCell>Delete</Table.HeadCell>
-              <Table.HeadCell>
-                <span>Edit</span>
-              </Table.HeadCell>
-            </Table.Head>
-            {userPosts.map((post, index) => (
-              <Table.Body className="divide-y" key={index}>
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell>
-                    {new Date(post.updatedAt).toLocaleDateString()}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/post/${post.slug}`}>
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-20 h-10 object-cover bg-gray-500"
-                      />
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      className="font-medium text-gray-900 dark:text-white"
-                      to={`/post/${post.slug}`}
-                    >
-                      {post.title}
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>{post.category}</Table.Cell>
-                  <Table.Cell>
-                    <span
-                      onClick={() => {
-                        setShowModal(true);
-                        setPostIdToDelete(post._id);
-                      }}
-                      className="font-medium text-red-500 hover:underline cursor-pointer"
-                    >
-                      Delete
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      className="text-teal-500 hover:underline"
-                      to={`/update-post/${post._id}`}
-                    >
-                      <span>Edit</span>
-                    </Link>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className="w-full text-teal-500 self-center text-sm py-7"
-            >
-              Show more
-            </button>
-          )}
-        </>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {userPosts.map((post) => (
+            <div key={post._id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-transform hover:scale-[1.02]">
+              <Link to={`/post/${post.slug}`}>
+                <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+              </Link>
+              <div className="p-4">
+                <Link to={`/post/${post.slug}`}>
+                  <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white line-clamp-1">{post.title}</h2>
+                </Link>
+                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
+                    {post.category}
+                  </span>
+                  <span className="ml-auto">{new Date(post.updatedAt).toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <Link to={`/update-post/${post._id}`} className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setShowModal(true);
+                      setPostIdToDelete(post._id);
+                    }}
+                    className="text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300 font-medium"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>You have no posts yet!</p>
+        <div className="text-center py-10">
+          <p className="text-gray-600 dark:text-gray-400">No posts found</p>
+        </div>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size="md"
-      >
+      
+      {showMore && (
+        <button
+          onClick={handleShowMore}
+          className="mt-6 w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+        >
+          Load More Posts
+        </button>
+      )}
+
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size="md">
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -157,10 +118,10 @@ export function DashPosts() {
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeletePost}>
-                Yes, I'm sure
+                Yes, delete it
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
+                Cancel
               </Button>
             </div>
           </div>

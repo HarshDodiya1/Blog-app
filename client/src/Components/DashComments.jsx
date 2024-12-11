@@ -1,8 +1,8 @@
-import { Modal, Table, Button } from 'flowbite-react';
+import { Modal, Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { FaCheck, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaRegClock } from 'react-icons/fa';
 
 export function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
@@ -10,6 +10,7 @@ export function DashComments() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState('');
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -21,8 +22,7 @@ export function DashComments() {
             setShowMore(false);
           }
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     if (currentUser.user.isAdmin) {
       fetchComments();
@@ -32,9 +32,7 @@ export function DashComments() {
   const handleShowMore = async () => {
     const startIndex = comments.length;
     try {
-      const res = await fetch(
-        `/api/comment/getcomments?startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/comment/getcomments?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setComments((prev) => [...prev, ...data.comments]);
@@ -42,100 +40,90 @@ export function DashComments() {
           setShowMore(false);
         }
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleDeleteComment = async () => {
-    setShowModal(false);
     try {
-      const res = await fetch(
-        `/api/comment/deleteComment/${commentIdToDelete}`,
-        {
-          method: 'DELETE',
-        }
-      );
-      const data = await res.json();
+      const res = await fetch(`/api/comment/deleteComment/${commentIdToDelete}`, {
+        method: 'DELETE',
+      });
       if (res.ok) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentIdToDelete)
-        );
+        setComments((prev) => prev.filter((comment) => comment._id !== commentIdToDelete));
         setShowModal(false);
-      } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+    <div className="max-w-6xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Manage Comments</h1>
       {currentUser.user.isAdmin && comments.length > 0 ? (
-        <>
-          <Table hoverable className='shadow-md'>
-            <Table.Head>
-              <Table.HeadCell>Date updated</Table.HeadCell>
-              <Table.HeadCell>Comment content</Table.HeadCell>
-              <Table.HeadCell>Number of likes</Table.HeadCell>
-              <Table.HeadCell>PostId</Table.HeadCell>
-              <Table.HeadCell>UserId</Table.HeadCell>
-              <Table.HeadCell>Delete</Table.HeadCell>
-            </Table.Head>
-            {comments.map((comment) => (
-              <Table.Body className='divide-y' key={comment._id}>
-                <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                  <Table.Cell>
-                    {new Date(comment.updatedAt).toLocaleDateString()}
-                  </Table.Cell>
-                  <Table.Cell>{comment.content}</Table.Cell>
-                  <Table.Cell>{comment.numberOfLikes}</Table.Cell>
-                  <Table.Cell>{comment.postId}</Table.Cell>
-                  <Table.Cell>{comment.userId}</Table.Cell>
-                  <Table.Cell>
-                    <span
-                      onClick={() => {
-                        setShowModal(true);
-                        setCommentIdToDelete(comment._id);
-                      }}
-                      className='font-medium text-red-500 hover:underline cursor-pointer'
-                    >
-                      Delete
-                    </span>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
-            >
-              Show more
-            </button>
-          )}
-        </>
+        <div className="space-y-4">
+          {comments.map((comment) => (
+            <div key={comment._id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-gray-800 dark:text-gray-200 text-lg mb-2">{comment.content}</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center">
+                      <FaRegClock className="mr-1" />
+                      {new Date(comment.updatedAt).toLocaleDateString()}
+                    </div>
+                    <div className="flex items-center">
+                      <FaHeart className="mr-1 text-red-500" />
+                      {comment.numberOfLikes} likes
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowModal(true);
+                    setCommentIdToDelete(comment._id);
+                  }}
+                  className="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <span>Post ID: {comment.postId}</span>
+                  <span>User ID: {comment.userId}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>You have no comments yet!</p>
+        <div className="text-center py-10">
+          <p className="text-gray-600 dark:text-gray-400">No comments found</p>
+        </div>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size='md'
-      >
+
+      {showMore && (
+        <button
+          onClick={handleShowMore}
+          className="mt-6 w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+        >
+          Load More Comments
+        </button>
+      )}
+
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size="md">
         <Modal.Header />
         <Modal.Body>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
-            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
               Are you sure you want to delete this comment?
             </h3>
-            <div className='flex justify-center gap-4'>
-              <Button color='failure' onClick={handleDeleteComment}>
-                Yes, I'm sure
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteComment}>
+                Yes, delete
               </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
-                No, cancel
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                Cancel
               </Button>
             </div>
           </div>

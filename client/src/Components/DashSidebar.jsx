@@ -1,4 +1,7 @@
-import { Sidebar } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signoutSuccess } from "../redux/User/userSlice";
 import {
   HiUser,
   HiArrowSmRight,
@@ -7,10 +10,6 @@ import {
   HiAnnotation,
   HiChartPie,
 } from "react-icons/hi";
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { signoutSuccess } from "../redux/User/userSlice";
-import { useDispatch, useSelector } from "react-redux";
 
 export const DashSidebar = () => {
   const location = useLocation();
@@ -25,86 +24,100 @@ export const DashSidebar = () => {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
   const handleSignout = async () => {
     try {
       const res = await fetch("/api/user/signout", {
         method: "POST",
       });
       const data = await res.json();
-      if (!res.ok) {
-      } else {
+      if (res.ok) {
         dispatch(signoutSuccess());
       }
     } catch (error) {}
   };
+
+  const NavItem = ({ to, icon: Icon, label, active }) => (
+    <Link to={to}>
+      <div
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+          active
+            ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+            : "hover:bg-gray-100 dark:hover:bg-gray-700"
+        }`}
+      >
+        <Icon className="w-5 h-5" />
+        <span className="font-medium">{label}</span>
+      </div>
+    </Link>
+  );
+
   return (
-    <Sidebar className="w-full h-full border-none">
-      {" "}
-      {/* Removed default border */}
-      <Sidebar.Items className="h-full py-4">
-        <Sidebar.ItemGroup className="flex flex-col gap-1">
-          {currentUser && currentUser.user.isAdmin && (
-            <Link to="/dashboard?tab=dash">
-              <Sidebar.Item
-                active={tab === "dash" || !tab}
-                icon={HiChartPie}
-                className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-              >
-                Dashboard
-              </Sidebar.Item>
-            </Link>
-          )}
-          <Link to="/dashboard?tab=profile">
-            <Sidebar.Item
-              active={tab === "profile"}
-              icon={HiUser}
-              label={currentUser.user.isAdmin ? "Admin" : "User"}
-              labelColor="dark"
-              className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-            >
-              Profile
-            </Sidebar.Item>
-          </Link>
-          {currentUser.user.isAdmin && (
-            <>
-              <Link to="/dashboard?tab=posts">
-                <Sidebar.Item
-                  active={tab === "posts"}
-                  icon={HiDocumentText}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-                >
-                  Posts
-                </Sidebar.Item>
-              </Link>
-              <Link to="/dashboard?tab=users">
-                <Sidebar.Item
-                  active={tab === "users"}
-                  icon={HiOutlineUserGroup}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-                >
-                  Users
-                </Sidebar.Item>
-              </Link>
-              <Link to="/dashboard?tab=comments">
-                <Sidebar.Item
-                  active={tab === "comments"}
-                  icon={HiAnnotation}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-                >
-                  Comments
-                </Sidebar.Item>
-              </Link>
-            </>
-          )}
-          <Sidebar.Item
-            icon={HiArrowSmRight}
-            className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-            onClick={handleSignout}
-          >
-            Sign Out
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
-    </Sidebar>
+    <div className="p-4 flex flex-col h-full">
+      <div className="mb-6">
+        <div className="flex items-center gap-3 px-4">
+          <img
+            src={currentUser.user.profilePicture}
+            alt="profile"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <div>
+            <h4 className="font-semibold dark:text-white">
+              {currentUser.user.username}
+            </h4>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {currentUser.user.isAdmin ? "Administrator" : "User"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <nav className="flex-1 space-y-2">
+        {currentUser.user.isAdmin && (
+          <NavItem
+            to="/dashboard?tab=dash"
+            icon={HiChartPie}
+            label="Dashboard"
+            active={tab === "dash" || !tab}
+          />
+        )}
+        <NavItem
+          to="/dashboard?tab=profile"
+          icon={HiUser}
+          label="Profile"
+          active={tab === "profile"}
+        />
+        {currentUser.user.isAdmin && (
+          <>
+            <NavItem
+              to="/dashboard?tab=posts"
+              icon={HiDocumentText}
+              label="Posts"
+              active={tab === "posts"}
+            />
+            <NavItem
+              to="/dashboard?tab=users"
+              icon={HiOutlineUserGroup}
+              label="Users"
+              active={tab === "users"}
+            />
+            <NavItem
+              to="/dashboard?tab=comments"
+              icon={HiAnnotation}
+              label="Comments"
+              active={tab === "comments"}
+            />
+          </>
+        )}
+      </nav>
+
+      <div
+        onClick={handleSignout}
+        className="mt-auto cursor-pointer flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+      >
+        <HiArrowSmRight className="w-5 h-5" />
+        <span className="font-medium">Sign Out</span>
+      </div>
+    </div>
   );
 };

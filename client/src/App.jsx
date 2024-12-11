@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { FooterComponent } from "./Components/Footer";
 import { Header } from "./Components/Header";
 import { OnlyAdminPrivateRoute } from "./Components/OnlyAdminPrivateRoute";
@@ -16,6 +16,11 @@ import { SignUp } from "./Pages/SignUp";
 import { UpdatePost } from "./Pages/UpdatePost";
 
 function App() {
+  const FooterWithoutDashboard = () => {
+    const location = useLocation();
+    const isDashboardRoute = location.pathname.includes("/dashboard");
+    return !isDashboardRoute && <FooterComponent />;
+  };
   return (
     <BrowserRouter>
       <Header />
@@ -32,13 +37,11 @@ function App() {
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/update-post/:postId/" element={<UpdatePost />} />
         </Route>
-
         <Route path="/about" element={<About />} />
-
         <Route path="/contact" element={<Projects />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
       </Routes>
-      <FooterComponent />
+      <FooterWithoutDashboard />
     </BrowserRouter>
   );
 }

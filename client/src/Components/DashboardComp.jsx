@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   HiAnnotation,
   HiArrowNarrowUp,
   HiDocumentText,
   HiOutlineUserGroup,
-} from 'react-icons/hi';
-import { Button, Table } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+  HiChartBar,
+  HiClock,
+} from "react-icons/hi";
 
 export function DashboardComp() {
   const [users, setUsers] = useState([]);
@@ -23,39 +24,36 @@ export function DashboardComp() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch('/api/user/getusers?limit=5');
+        const res = await fetch("/api/user/getusers?limit=5");
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
           setTotalUsers(data.totalUsers);
           setLastMonthUsers(data.lastMonthUsers);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/post/getposts?limit=5');
+        const res = await fetch("/api/post/getposts?limit=5");
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
           setTotalPosts(data.totalPosts);
           setLastMonthPosts(data.lastMonthPosts);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     const fetchComments = async () => {
       try {
-        const res = await fetch('/api/comment/getcomments?limit=5');
+        const res = await fetch("/api/comment/getcomments?limit=5");
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);
           setTotalComments(data.totalComments);
           setLastMonthComments(data.lastMonthComments);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     if (currentUser.user.isAdmin) {
       fetchUsers();
@@ -63,146 +61,139 @@ export function DashboardComp() {
       fetchComments();
     }
   }, [currentUser]);
-  return (
-    <div className='p-3 md:mx-auto'>
-      <div className='flex-wrap flex gap-4 justify-center'>
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
-          <div className='flex justify-between'>
-            <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Users</h3>
-              <p className='text-2xl'>{totalUsers}</p>
-            </div>
-            <HiOutlineUserGroup className='bg-teal-600  text-white rounded-full text-5xl p-3 shadow-lg' />
-          </div>
-          <div className='flex  gap-2 text-sm'>
-            <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthUsers}
-            </span>
-            <div className='text-gray-500'>Last month</div>
-          </div>
+  const StatCard = ({ title, total, lastMonth, icon: Icon, color }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-transform hover:scale-105">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
+          <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
+            {total}
+          </h3>
         </div>
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
-          <div className='flex justify-between'>
-            <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>
-                Total Comments
-              </h3>
-              <p className='text-2xl'>{totalComments}</p>
-            </div>
-            <HiAnnotation className='bg-indigo-600  text-white rounded-full text-5xl p-3 shadow-lg' />
-          </div>
-          <div className='flex  gap-2 text-sm'>
-            <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthComments}
-            </span>
-            <div className='text-gray-500'>Last month</div>
-          </div>
-        </div>
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
-          <div className='flex justify-between'>
-            <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Posts</h3>
-              <p className='text-2xl'>{totalPosts}</p>
-            </div>
-            <HiDocumentText className='bg-lime-600  text-white rounded-full text-5xl p-3 shadow-lg' />
-          </div>
-          <div className='flex  gap-2 text-sm'>
-            <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthPosts}
-            </span>
-            <div className='text-gray-500'>Last month</div>
-          </div>
+        <div className={`p-3 rounded-full ${color}`}>
+          <Icon className="w-6 h-6 text-white" />
         </div>
       </div>
-      <div className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent users</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
-              <Link to={'/dashboard?tab=users'}>See all</Link>
-            </Button>
+      <div className="flex items-center text-sm">
+        <HiArrowNarrowUp className="text-green-500 mr-1" />
+        <span className="text-green-500 font-medium">{lastMonth}</span>
+        <span className="text-gray-500 dark:text-gray-400 ml-2">
+          Last month
+        </span>
+      </div>
+    </div>
+  );
+
+  const RecentSection = ({ title, data, type }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+          {title}
+        </h2>
+        <Link
+          to={`/dashboard?tab=${type}`}
+          className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 text-sm font-medium"
+        >
+          View All
+        </Link>
+      </div>
+      <div className="space-y-4">
+        {data.map((item) => (
+          <div
+            key={item._id}
+            className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            {type === "users" && (
+              <>
+                <img
+                  src={item.profilePicture}
+                  alt={item.username}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="font-medium text-gray-800 dark:text-white">
+                    {item.username}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Joined {new Date(item.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </>
+            )}
+            {type === "comments" && (
+              <>
+                <div className="flex-1">
+                  <p className="text-gray-800 dark:text-white line-clamp-1">
+                    {item.content}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <HiClock className="inline mr-1" />
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                  <HiChartBar className="w-4 h-4" />
+                  <span>{item.numberOfLikes}</span>
+                </div>
+              </>
+            )}
+            {type === "posts" && (
+              <>
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-16 h-12 rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 dark:text-white line-clamp-1">
+                    {item.title}
+                  </p>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {item.category}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
-          <Table hoverable>
-            <Table.Head>
-              <Table.HeadCell>User image</Table.HeadCell>
-              <Table.HeadCell>Username</Table.HeadCell>
-            </Table.Head>
-            {users &&
-              users.map((user) => (
-                <Table.Body key={user._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                    <Table.Cell>
-                      <img
-                        src={user.profilePicture}
-                        alt='user'
-                        className='w-10 h-10 rounded-full bg-gray-500'
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{user.username}</Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
-          </Table>
-        </div>
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent comments</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
-              <Link to={'/dashboard?tab=comments'}>See all</Link>
-            </Button>
-          </div>
-          <Table hoverable>
-            <Table.Head>
-              <Table.HeadCell>Comment content</Table.HeadCell>
-              <Table.HeadCell>Likes</Table.HeadCell>
-            </Table.Head>
-            {comments &&
-              comments.map((comment) => (
-                <Table.Body key={comment._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                    <Table.Cell className='w-96'>
-                        <p className='line-clamp-2'>{comment.content}</p>
-                    </Table.Cell>
-                    <Table.Cell>{comment.numberOfLikes}</Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
-          </Table>
-        </div>
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent posts</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
-              <Link to={'/dashboard?tab=posts'}>See all</Link>
-            </Button>
-          </div>
-          <Table hoverable>
-            <Table.Head>
-              <Table.HeadCell>Post image</Table.HeadCell>
-              <Table.HeadCell>Post Title</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
-            </Table.Head>
-            {posts &&
-              posts.map((post) => (
-                <Table.Body key={post._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                    <Table.Cell>
-                      <img
-                        src={post.image}
-                        alt='user'
-                        className='w-14 h-10 rounded-md bg-gray-500'
-                      />
-                    </Table.Cell>
-                    <Table.Cell className='w-96'>{post.title}</Table.Cell>
-                    <Table.Cell className='w-5'>{post.category}</Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
-          </Table>
-        </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <StatCard
+          title="Total Users"
+          total={totalUsers}
+          lastMonth={lastMonthUsers}
+          icon={HiOutlineUserGroup}
+          color="bg-blue-600"
+        />
+        <StatCard
+          title="Total Comments"
+          total={totalComments}
+          lastMonth={lastMonthComments}
+          icon={HiAnnotation}
+          color="bg-purple-600"
+        />
+        <StatCard
+          title="Total Posts"
+          total={totalPosts}
+          lastMonth={lastMonthPosts}
+          icon={HiDocumentText}
+          color="bg-green-600"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <RecentSection title="Recent Users" data={users} type="users" />
+        <RecentSection
+          title="Recent Comments"
+          data={comments}
+          type="comments"
+        />
+        <RecentSection title="Recent Posts" data={posts} type="posts" />
       </div>
     </div>
   );

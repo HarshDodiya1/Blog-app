@@ -18,24 +18,22 @@ export const Dashboard = () => {
     }
   }, [location.search]);
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar wrapper with proper mobile spacing */}
-      <div className="md:w-56 md:fixed md:inset-y-0 md:top-[73px] bg-white dark:bg-gray-800 border-r dark:border-gray-700 z-30">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 ">
+      <div className="md:w-64 md:fixed md:inset-y-0 md:top-[73px] bg-white dark:bg-gray-800 shadow-lg z-30 transition-all duration-300">
         <div className="mt-[73px] md:mt-0">
-          {" "}
-          {/* Added top margin for mobile only */}
           <DashSidebar />
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 md:ml-56 mt-[73px]">
-        <div className="p-4">
-          {tab === "profile" && <DashProfile />}
-          {tab === "posts" && <DashPosts />}
-          {tab === "users" && <DashUsers />}
-          {tab === "comments" && <DashComments />}
-          {tab === "dash" && <DashboardComp />}
+      <div className="flex-1 md:ml-64 mt-[73px] transition-all duration-300">
+        <div className="p-6 max-w-7xl mx-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            {tab === "profile" && <DashProfile />}
+            {tab === "posts" && <DashPosts />}
+            {tab === "users" && <DashUsers />}
+            {tab === "comments" && <DashComments />}
+            {tab === "dash" && <DashboardComp />}
+          </div>
         </div>
       </div>
     </div>
