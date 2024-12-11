@@ -16,13 +16,9 @@ export const FooterComponent = () => {
               to="/"
               className="flex items-center gap-3 mb-4 hover:scale-105 transition-transform duration-300"
             >
-              <img
-                src={Logo}
-                alt="Harsh's Blog"
-                className="w-10 h-10 rounded-lg"
-              />
+              <img src={Logo} alt="Quillier" className="w-10 h-10 rounded-lg" />
               <span className="text-xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-                Harsh's Blog
+                Quillier
               </span>
             </Link>
             <p className="text-gray-500 dark:text-gray-400 text-sm">

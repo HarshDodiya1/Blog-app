@@ -1,27 +1,62 @@
-import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../firebase";
+import { Alert, Button, FileInput, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import { app } from "../firebase";
+import { useSelector } from "react-redux";
 
 export const CreatePost = () => {
+  const { theme } = useSelector((state) => state.theme);
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-
   const navigate = useNavigate();
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image", "video"],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ["code-block"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "video",
+    "color",
+    "background",
+    "align",
+    "code-block",
+  ];
 
   const handleUpdloadImage = async () => {
     try {
@@ -85,13 +120,17 @@ export const CreatePost = () => {
     }
   };
   return (
-    <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
+    <div
+      className={`p-3 max-w-4xl mx-auto min-h-screen mt-[70px] ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}
+    >
+      <h1 className="text-center text-4xl my-7 font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
+        Create Your Post
+      </h1>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+        <div className="flex flex-col md:flex-row gap-4">
           <TextInput
             type="text"
-            placeholder="Title"
+            placeholder="Title of your story..."
             required
             id="title"
             className="flex-1"
@@ -99,22 +138,27 @@ export const CreatePost = () => {
               setFormData({ ...formData, title: e.target.value })
             }
           />
-          <Select
+          <TextInput
+            type="text"
+            placeholder="Category (e.g., Technology, Life, Travel)"
+            required
+            id="category"
+            className="flex-1"
             onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
+              setFormData({
+                ...formData,
+                category: e.target.value.toLowerCase(),
+              })
             }
-          >
-            <option value="uncategorized">Select a category</option>
-            <option value="javascript">JavaScript</option>
-            <option value="reactjs">React.js</option>
-            <option value="nextjs">Next.js</option>
-          </Select>
+          />
         </div>
-        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+
+        <div className="flex gap-4 items-center justify-between border-2 border-teal-500 border-dashed p-4 rounded-lg">
           <FileInput
             type="file"
             accept="image/*"
             onChange={(e) => setFile(e.target.files[0])}
+            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-500 file:text-white hover:file:bg-purple-600"
           />
           <Button
             type="button"
@@ -136,26 +180,38 @@ export const CreatePost = () => {
             )}
           </Button>
         </div>
+
         {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
         {formData.image && (
           <img
             src={formData.image}
             alt="upload"
-            className="w-full h-72 object-cover"
+            className="w-full h-72 object-cover rounded-lg shadow-lg"
           />
         )}
-        <ReactQuill
-          theme="snow"
-          placeholder="Write something..."
-          className="h-72 mb-12"
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
-        />
-        <Button type="submit" gradientDuoTone="purpleToPink">
-          Publish
+
+        <div className={`${theme === "dark" ? "quill-dark" : "quill-light"}`}>
+          <ReactQuill
+            theme="snow"
+            placeholder="Share your thoughts..."
+            className="h-96 mb-12"
+            required
+            modules={modules}
+            formats={formats}
+            onChange={(value) => {
+              setFormData({ ...formData, content: value });
+            }}
+          />
+        </div>
+
+        <Button
+          type="submit"
+          gradientDuoTone="purpleToPink"
+          className="w-full md:w-auto md:self-end"
+        >
+          Publish Post
         </Button>
+
         {publishError && (
           <Alert className="mt-5" color="failure">
             {publishError}

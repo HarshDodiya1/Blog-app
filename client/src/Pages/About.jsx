@@ -5,7 +5,7 @@ export function About() {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-            About Harsh's Blog
+            About Quillier
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mx-auto rounded-full"></div>
         </div>

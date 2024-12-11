@@ -21,7 +21,7 @@ export function Home() {
           <div className="flex flex-col items-center text-center">
             {/* Main Heading with Gradient */}
             <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-              Welcome to Harsh's Blog
+              Welcome to Quillier
             </h1>
 
             {/* Subtitle with better typography */}

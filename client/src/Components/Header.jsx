@@ -53,9 +53,13 @@ export function Header() {
           to="/"
           className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300"
         >
-          <img src={Logo} alt="Harsh's Blog" className="w-10 h-10 rounded-lg" />
+          <img
+            src={Logo}
+            alt="Quillier Blog"
+            className="w-10 h-10 rounded-lg"
+          />
           <span className="text-xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text hidden sm:inline">
-            Harsh's Blog
+            Quillier
           </span>
         </Link>
 

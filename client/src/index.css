@@ -47,3 +47,61 @@ body {
 .dark .navbar-blur {
   background-color: rgba(17, 24, 39, 0.9);
 }
+
+/* Quill Editor Dark Theme */
+.quill-dark .ql-toolbar {
+  background-color: #374151;
+  border-color: #4b5563;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.quill-dark .ql-container {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  color: #e5e7eb;
+}
+
+.quill-dark .ql-editor.ql-blank::before {
+  color: #9ca3af;
+}
+
+.quill-dark .ql-stroke {
+  stroke: #e5e7eb;
+}
+
+.quill-dark .ql-fill {
+  fill: #e5e7eb;
+}
+
+/* Quill Editor Light Theme */
+.quill-light .ql-toolbar {
+  background-color: #f3f4f6;
+  border-color: #e5e7eb;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.quill-light .ql-container {
+  border-color: #e5e7eb;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.ql-picker-label {
+  color: #b5b9c2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .ql-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ql-formats {
+    margin-right: 0 !important;
+  }
+}

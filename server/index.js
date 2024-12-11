@@ -22,8 +22,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://frontend-domain.vercel.app"],
-
+    origin: [
+      process.env.REACT_APP_API_URL_DEV,
+      process.env.REACT_APP_API_URL_PROD,
+    ],
     credentials: true,
   })
 );
