@@ -22,7 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:5173", "https://frontend-domain.vercel.app"],
+
     credentials: true,
   })
 );
@@ -31,12 +32,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
-
-// app.use(express.static(path.join(__dirname, "/client/dist")));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-// });
 
 app.get("/", (req, res) => {
   return res.json({
