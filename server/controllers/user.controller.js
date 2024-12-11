@@ -6,9 +6,6 @@ exports.test = (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  console.log("This is our params ", req.params.userId);
-  console.log("This is our req.user.id:  ", req.params.userId);
-
   if (req.user.id !== req.params.userId) {
     return res.status(403).json({
       success: false,
@@ -50,10 +47,6 @@ exports.updateUser = async (req, res) => {
       });
     }
   }
-  console.log("Username: ", req.body.username);
-  console.log("email: ", req.body.email);
-  console.log("ProfilePicture: ", req.body.profilePicture);
-  console.log("req.params.userId", req.params.userId);
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -68,7 +61,6 @@ exports.updateUser = async (req, res) => {
       { new: true }
     );
     const { password, ...user } = updatedUser._doc;
-    console.log("updatedUser._doc: User: ", user);
     res.status(200).json({
       success: true,
       message: "Yess now problem solved.",
@@ -117,7 +109,6 @@ exports.signout = (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    console.log("this is req.user: from getUser: ", req.params.userId);
     if (!user) {
       return res.status(403).json({
         success: false,
@@ -126,7 +117,6 @@ exports.getUser = async (req, res) => {
     }
     const { password, ...rest } = user._doc;
     res.status(200).json(rest);
-    console.log("this is rest: ", rest)
   } catch (error) {
     console.log(error);
     return res.status(400).json({
@@ -138,7 +128,6 @@ exports.getUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    console.log("final WHY NOT GETTING USER?: ", req.user);
     if (!req.user.isAdmin) {
       return res.status(403).json({
         success: false,
@@ -177,12 +166,6 @@ exports.getUsers = async (req, res) => {
       totalUsers,
       lastMonthUsers,
     });
-    console.log(
-      "UserwithoutPassword, totalUsers, lastmonthUsers: ",
-      usersWithoutPassword,
-      totalUsers,
-      lastMonthUsers
-    );
   } catch (error) {
     console.log(error);
     return res.status(400).json({

@@ -33,7 +33,6 @@ export const SignIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log("This is the data", data);
       if (data.success == true) {
         dispatch(signInSuccess(data));
         navigate("/");

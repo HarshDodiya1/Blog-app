@@ -8,7 +8,6 @@ exports.signup = async (req, res) => {
   try {
     // fetch the data from req.body
     const { email, username, password } = req.body;
-    console.log(req.body);
 
     // validate the data
     if (!email || !username || !password) {
@@ -54,7 +53,6 @@ exports.signin = async (req, res) => {
     // fetch the data from req.body
     const { email, password } = req.body;
 
-    console.log("Whats going on ? :  ", req.body);
 
     // validate the provided values
     if (!email || !password) {
@@ -189,7 +187,6 @@ exports.googleAuth = async (req, res) => {
         user,
         message: "User Login Success",
       });
-      console.log("yepp created")
     }
   } catch (error) {
     console.log(error);

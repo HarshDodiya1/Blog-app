@@ -3,7 +3,6 @@ const Comment = require("../models/comment.model");
 exports.createComment = async (req, res) => {
   try {
     const { content, postId, userId } = req.body;
-    console.log("req.body from comment: ", req.body)
 
     if (userId !== req.user.id) {
       return res.status(403).json({
