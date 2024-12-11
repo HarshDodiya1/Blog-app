@@ -8,7 +8,7 @@ export default defineConfig({
       "/api": {
         target:
           process.env.NODE_ENV === "production"
-            ? "https://backendquiller.vercel.app/"
+            ? "https://quillier-backend.vercel.app/"
             : "http://localhost:3000",
         secure: false,
       },
