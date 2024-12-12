@@ -11,10 +11,10 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target:"http://localhost:3000",
-          // process.env.NODE_ENV === "production"
-          //   ? process.env.VITE_API_BASE_PROD
-          //   : process.env.VITE_API_BASE_DEV,
+        target:
+          process.env.NODE_ENV === "production"
+            ? process.env.VITE_API_BASE_PROD
+            : process.env.VITE_API_BASE_DEV,
         secure: false,
       },
     },
